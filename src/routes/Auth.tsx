@@ -1,8 +1,10 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from 'firebase/auth'
-import { ChangeEvent, FormEvent, MouseEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, MouseEvent, useState } from 'react'
 import { authService } from '../firebase'
 
 const Auth = () => {
@@ -36,6 +38,19 @@ const Auth = () => {
     }
   }
 
+  const toggleAccount = () => setNewAccount((newAccount) => !newAccount)
+
+  const onSocialPopup = async (e: MouseEvent<HTMLButtonElement>) => {
+    let provider
+    if (e.currentTarget.name === 'google') {
+      provider = new GoogleAuthProvider()
+    }
+
+    if (!provider) return
+
+    await signInWithPopup(authService, provider)
+  }
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -56,9 +71,15 @@ const Auth = () => {
           onChange={onChange}
         />
         <input type="submit" value={newAccount ? 'Create Account' : 'Log In'} />
+        <br />
+        <span onClick={toggleAccount}>
+          {newAccount ? 'Go to Sign In' : 'Go to Create Account'}
+        </span>
       </form>
       <div>
-        <button name="google">Continue with Google</button>
+        <button name="google" onClick={onSocialPopup}>
+          Continue with Google
+        </button>
       </div>
     </div>
   )
