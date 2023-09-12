@@ -1,7 +1,8 @@
 import RouterApp from './routes/RouterApp'
 import { authService } from './firebase'
 import { useEffect, useState } from 'react'
-import { User } from 'firebase/auth'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   const [init, setInit] = useState(false)
@@ -20,6 +21,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer />
       {init ? <RouterApp isLoggedIn={isLoggedIn} /> : 'Initialize'}
       <footer>&copy; {new Date().getFullYear()} Linwitter</footer>
     </>
