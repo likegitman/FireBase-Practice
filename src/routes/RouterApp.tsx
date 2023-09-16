@@ -1,22 +1,24 @@
-import { User } from 'firebase/auth'
 import { Routes, Route } from 'react-router-dom'
-import Auth from './Auth'
-import EditProfile from './EditProfile'
-import Home from './Home'
-import Profile from './Profile'
+import Navigation from '../components/Navigation'
+import Auth from '../pages/Auth'
+import Home from '../pages/Home'
+import Profile from '../pages/Profile'
 
 const RouterApp = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   return (
-    <Routes>
-      {isLoggedIn ? (
-        <>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-        </>
-      ) : (
-        <Route path="/" element={<Auth />} />
-      )}
-    </Routes>
+    <>
+      {isLoggedIn && <Navigation />}
+      <Routes>
+        {isLoggedIn ? (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+          </>
+        ) : (
+          <Route path="/" element={<Auth />} />
+        )}
+      </Routes>
+    </>
   )
 }
 
