@@ -1,4 +1,4 @@
-export interface AuthHookForm {
+export interface AuthFormState {
   email: string
   password: string
 }
