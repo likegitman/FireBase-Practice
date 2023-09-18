@@ -7,16 +7,12 @@ import { User } from 'firebase/auth'
 
 function App() {
   const [init, setInit] = useState<boolean>(false)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
   const [userObj, setUserObj] = useState<User>()
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
-        setIsLoggedIn(true)
         setUserObj(user)
-      } else {
-        setIsLoggedIn(false)
       }
       setInit(true)
     })
@@ -26,11 +22,11 @@ function App() {
     <>
       <ToastContainer />
       {init ? (
-        <RouterApp isLoggedIn={isLoggedIn} userObj={userObj} />
+        <RouterApp isLoggedIn={Boolean(userObj)} userObj={userObj} />
       ) : (
         'Initialize'
       )}
-      <footer>&copy; {new Date().getFullYear()} Linwitter</footer>
+      {/* <footer>&copy; {new Date().getFullYear()} Linwitter</footer> */}
     </>
   )
 }

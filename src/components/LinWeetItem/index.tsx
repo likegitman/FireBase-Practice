@@ -23,7 +23,6 @@ const LinWeetItem = ({
     await updateDoc(doc(dbService, `linweets/${weet.id}`), {
       text: newWeet,
     })
-    console.log(weet, newWeet)
     setEditing(false)
   }
 

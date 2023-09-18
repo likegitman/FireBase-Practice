@@ -1,6 +1,6 @@
 import { User } from 'firebase/auth'
 import { addDoc, collection, getDocs, onSnapshot } from 'firebase/firestore'
-import { FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import LinWeetItem from '../components/LinWeetItem'
 import { dbService } from '../firebase'
@@ -10,6 +10,7 @@ const Home = ({ userObj }: { userObj: User | undefined }) => {
   const form = useForm({ defaultValues: { linweet: '' } })
   const { register, watch, setValue } = form
   const [linWeets, setLinWeets] = useState<GetWeetsTypes[]>([])
+  const [attachment, setAttachment] = useState<string | undefined>('')
 
   // const getLinWeets = async () => {
   //   const newLinWeets = await getDocs(collection(dbService, 'linweets'))
@@ -21,6 +22,7 @@ const Home = ({ userObj }: { userObj: User | undefined }) => {
   //     setLinWeets((prev: any) => [...prev, linWeetsObj])
   //   })
   // }
+
   useEffect(() => {
     onSnapshot(collection(dbService, 'linweets'), (snapshot) => {
       const linweetArray: GetWeetsTypes[] = snapshot.docs.map((doc) => ({
@@ -43,6 +45,17 @@ const Home = ({ userObj }: { userObj: User | undefined }) => {
     setValue('linweet', '')
   }
 
+  const onFileChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    const files: FileList | null = e.target.files
+    if (!files) return
+    const reader: FileReader = new FileReader()
+    reader.onloadend = () => {
+      const { result } = reader
+      setAttachment(result?.toString())
+    }
+    reader.readAsDataURL(files[0])
+  }
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -53,7 +66,19 @@ const Home = ({ userObj }: { userObj: User | undefined }) => {
             maxLength: 120,
           })}
         />
+        <input type="file" accept="image/*" onChange={onFileChanged} />
         <input type="submit" value="Linweet" />
+        {attachment && (
+          <div>
+            <img
+              src={attachment}
+              width="50px"
+              height="50px"
+              alt="linweet img"
+            />
+            <button onClick={() => setAttachment('')}>Clear</button>
+          </div>
+        )}
       </form>
       <ul>
         {linWeets
