@@ -3,4 +3,5 @@ export interface GetWeetsTypes {
   text?: string
   createdAt?: number
   creatorId?: string
+  attachmentUrl?: string
 }

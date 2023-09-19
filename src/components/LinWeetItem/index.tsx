@@ -47,6 +47,14 @@ const LinWeetItem = ({
       ) : (
         <>
           <h4>{weet.text}</h4>
+          {weet.attachmentUrl && (
+            <img
+              src={weet.attachmentUrl}
+              alt="linweet img"
+              width="50px"
+              height="50px"
+            />
+          )}
           {isMine && (
             <>
               <button onClick={() => setEditing((prev) => !prev)}>

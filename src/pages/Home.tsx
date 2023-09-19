@@ -1,16 +1,18 @@
 import { User } from 'firebase/auth'
 import { addDoc, collection, getDocs, onSnapshot } from 'firebase/firestore'
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import LinWeetItem from '../components/LinWeetItem'
-import { dbService } from '../firebase'
+import { dbService, storageService } from '../firebase'
 import { GetWeetsTypes } from '../types/GetWeetsTypes'
+import { v4 as uuidv4 } from 'uuid'
 
 const Home = ({ userObj }: { userObj: User | undefined }) => {
   const form = useForm({ defaultValues: { linweet: '' } })
   const { register, watch, setValue } = form
   const [linWeets, setLinWeets] = useState<GetWeetsTypes[]>([])
-  const [attachment, setAttachment] = useState<string | undefined>('')
+  const [attachment, setAttachment] = useState<string>()
 
   // const getLinWeets = async () => {
   //   const newLinWeets = await getDocs(collection(dbService, 'linweets'))
@@ -36,24 +38,36 @@ const Home = ({ userObj }: { userObj: User | undefined }) => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await addDoc(collection(dbService, 'linweets'), {
+    let attachmentUrl = ''
+
+    if (attachment) {
+      const imgFileRef = ref(storageService, `${userObj?.uid}/${uuidv4()}`)
+      const res = await uploadString(imgFileRef, attachment, 'data_url')
+      attachmentUrl = await getDownloadURL(res.ref)
+    }
+
+    const linweetObj = {
       text: watch('linweet'),
       createdAt: Date.now(),
       creatorId: userObj?.uid,
-    })
+      attachmentUrl,
+    }
+
+    await addDoc(collection(dbService, 'linweets'), linweetObj)
 
     setValue('linweet', '')
+    setAttachment('')
   }
 
   const onFileChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const files: FileList | null = e.target.files
-    if (!files) return
-    const reader: FileReader = new FileReader()
+    const theFile: FileList | null = e.target.files
+    if (!theFile) return
+    const reader = new FileReader()
     reader.onloadend = () => {
       const { result } = reader
       setAttachment(result?.toString())
     }
-    reader.readAsDataURL(files[0])
+    reader.readAsDataURL(theFile[0])
   }
 
   return (
