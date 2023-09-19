@@ -1,6 +1,7 @@
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { deleteObject, ref } from 'firebase/storage'
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { dbService } from '../../firebase'
+import { dbService, storageService } from '../../firebase'
 import { GetWeetsTypes } from '../../types/GetWeetsTypes'
 import * as S from './style'
 
@@ -15,7 +16,11 @@ const LinWeetItem = ({
   const [newWeet, setNewWeet] = useState<string | undefined>(weet.text)
   const onDelete = async () => {
     const ok = window.confirm('Are you sure you watn to delete thsi nweet?')
-    if (ok) await deleteDoc(doc(dbService, `linweets/${weet.id}`))
+    if (ok) {
+      await deleteDoc(doc(dbService, `linweets/${weet.id}`))
+      if (weet.attachmentUrl)
+        await deleteObject(ref(storageService, weet.attachmentUrl))
+    }
   }
 
   const onEdit = async (e: FormEvent<HTMLFormElement>) => {
