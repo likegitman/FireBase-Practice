@@ -43,6 +43,7 @@ const LinWeetItem = ({
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setNewWeet(e.target.value)
               }
+              onBlur={() => setEditing(false)}
               required
             />
             <input type="submit" value="Update Linweet" />
