@@ -8,9 +8,11 @@ import Profile from '../pages/Profile'
 const RouterApp = ({
   isLoggedIn,
   userObj,
+  refreshUser,
 }: {
   isLoggedIn: boolean
-  userObj: User | undefined
+  userObj: User | null
+  refreshUser: () => void
 }) => {
   return (
     <>
@@ -19,7 +21,10 @@ const RouterApp = ({
         {isLoggedIn ? (
           <>
             <Route path="/" element={<Home userObj={userObj} />} />
-            <Route path="/profile" element={<Profile userObj={userObj} />} />
+            <Route
+              path="/profile"
+              element={<Profile userObj={userObj} refreshUser={refreshUser} />}
+            />
           </>
         ) : (
           <Route path="/" element={<Auth />} />

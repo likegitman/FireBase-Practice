@@ -9,8 +9,10 @@ import {
   useRef,
   useState,
 } from 'react'
+import { toast } from 'react-toastify'
 import { dbService, storageService } from '../../firebase'
 import { GetWeetsTypes } from '../../types/GetWeetsTypes'
+import toastOptions from '../../types/ToastOptions'
 import * as S from './style'
 
 const LinWeetItem = ({
@@ -40,10 +42,14 @@ const LinWeetItem = ({
 
   const onEdit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await updateDoc(doc(dbService, `linweets/${weet.id}`), {
-      text: newWeet,
-    })
-    setEditing(false)
+    if (weet.text !== newWeet) {
+      await updateDoc(doc(dbService, `linweets/${weet.id}`), {
+        text: newWeet,
+      })
+      setEditing(false)
+    } else {
+      toast.error('There are no changes.', toastOptions)
+    }
   }
 
   return (

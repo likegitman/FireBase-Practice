@@ -5,7 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { authService, dbService } from '../firebase'
 import { GetWeetsTypes } from '../types/GetWeetsTypes'
 
-const Profile = ({ userObj }: { userObj: User | undefined }) => {
+const Profile = ({
+  userObj,
+  refreshUser,
+}: {
+  userObj: User | null
+  refreshUser: () => void
+}) => {
   const [myLinWeets, setMyLinWeets] = useState<GetWeetsTypes[]>([])
   const [displayName, setDisplayName] = useState<string | undefined>(
     userObj?.displayName ?? ''
@@ -43,6 +49,7 @@ const Profile = ({ userObj }: { userObj: User | undefined }) => {
     if (userObj?.displayName !== displayName) {
       await updateProfile(userObj!, { displayName })
     }
+    refreshUser()
   }
 
   return (

@@ -2,7 +2,7 @@ import { User } from 'firebase/auth'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Navigation = ({ userObj }: { userObj: User | undefined }) => {
+const Navigation = ({ userObj }: { userObj: User | null }) => {
   return (
     <nav>
       <ul>

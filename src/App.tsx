@@ -3,11 +3,11 @@ import { authService } from './firebase'
 import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { User } from 'firebase/auth'
+import { updateCurrentUser, User } from 'firebase/auth'
 
 function App() {
   const [init, setInit] = useState<boolean>(false)
-  const [userObj, setUserObj] = useState<User>()
+  const [userObj, setUserObj] = useState<User | null>(null)
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
@@ -18,11 +18,20 @@ function App() {
     })
   }, [])
 
+  const refreshUser = async () => {
+    await updateCurrentUser(authService, authService.currentUser)
+    setUserObj(authService.currentUser)
+  }
+
   return (
     <>
       <ToastContainer />
       {init ? (
-        <RouterApp isLoggedIn={Boolean(userObj)} userObj={userObj} />
+        <RouterApp
+          isLoggedIn={Boolean(userObj)}
+          userObj={userObj}
+          refreshUser={refreshUser}
+        />
       ) : (
         'Initialize'
       )}
