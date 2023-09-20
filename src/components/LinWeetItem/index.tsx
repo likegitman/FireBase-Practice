@@ -1,6 +1,14 @@
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { deleteObject, ref } from 'firebase/storage'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import {
+  ChangeEvent,
+  FormEvent,
+  LegacyRef,
+  MutableRefObject,
+  RefObject,
+  useRef,
+  useState,
+} from 'react'
 import { dbService, storageService } from '../../firebase'
 import { GetWeetsTypes } from '../../types/GetWeetsTypes'
 import * as S from './style'
@@ -12,8 +20,15 @@ const LinWeetItem = ({
   weet: GetWeetsTypes
   isMine: boolean
 }) => {
+  const editingRef = useRef<HTMLInputElement | null>(null)
   const [editing, setEditing] = useState<boolean>(false)
   const [newWeet, setNewWeet] = useState<string | undefined>(weet.text)
+
+  const handleEdit = () => {
+    setEditing((prev) => !prev)
+    if (editingRef.current) editingRef.current.focus()
+  }
+
   const onDelete = async () => {
     const ok = window.confirm('Are you sure you watn to delete thsi nweet?')
     if (ok) {
@@ -44,6 +59,7 @@ const LinWeetItem = ({
                 setNewWeet(e.target.value)
               }
               onBlur={() => setEditing(false)}
+              ref={editingRef}
               required
             />
             <input type="submit" value="Update Linweet" />
@@ -63,9 +79,7 @@ const LinWeetItem = ({
           )}
           {isMine && (
             <>
-              <button onClick={() => setEditing((prev) => !prev)}>
-                Edit Weet
-              </button>
+              <button onClick={handleEdit}>Edit Weet</button>
               <button onClick={onDelete}>Delete Weet</button>
             </>
           )}
