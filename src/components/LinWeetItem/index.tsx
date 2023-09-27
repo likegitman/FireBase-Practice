@@ -1,19 +1,16 @@
+import {
+  faPencil,
+  faPencilAlt,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { deleteObject, ref } from 'firebase/storage'
-import {
-  ChangeEvent,
-  FormEvent,
-  LegacyRef,
-  MutableRefObject,
-  RefObject,
-  useRef,
-  useState,
-} from 'react'
+import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { dbService, storageService } from '../../firebase'
 import { GetWeetsTypes } from '../../types/GetWeetsTypes'
 import toastOptions from '../../types/ToastOptions'
-import * as S from './style'
 
 const LinWeetItem = ({
   weet,
@@ -53,10 +50,10 @@ const LinWeetItem = ({
   }
 
   return (
-    <S.LinWeetItemBox>
+    <div className="linweet">
       {editing ? (
         <>
-          <form onSubmit={onEdit}>
+          <form onSubmit={onEdit} className="container linweetEdit">
             <input
               type="text"
               placeholder="Edit your linweet"
@@ -67,31 +64,37 @@ const LinWeetItem = ({
               onBlur={() => setEditing(false)}
               ref={editingRef}
               required
+              autoFocus
+              className="formInput"
             />
-            <input type="submit" value="Update Linweet" />
+            <input type="submit" value="Update Linweet" className="formBtn" />
           </form>
-          <button onClick={() => setEditing((prev) => !prev)}>Cancel</button>
+          <span
+            onClick={() => setEditing((prev) => !prev)}
+            className="formBtn cancelBtn"
+          >
+            Cancel
+          </span>
         </>
       ) : (
         <>
           <h4>{weet.text}</h4>
           {weet.attachmentUrl && (
-            <img
-              src={weet.attachmentUrl}
-              alt="linweet img"
-              width="50px"
-              height="50px"
-            />
+            <img src={weet.attachmentUrl} alt="linweet img" />
           )}
           {isMine && (
-            <>
-              <button onClick={handleEdit}>Edit Weet</button>
-              <button onClick={onDelete}>Delete Weet</button>
-            </>
+            <div className="linweet__actions">
+              <span onClick={handleEdit}>
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </span>
+              <span onClick={onDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+            </div>
           )}
         </>
       )}
-    </S.LinWeetItemBox>
+    </div>
   )
 }
 

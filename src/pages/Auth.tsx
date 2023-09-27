@@ -1,3 +1,5 @@
+import { faGoogle, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { MouseEvent, useState } from 'react'
 import AuthForm from '../components/AuthForm'
@@ -20,13 +22,20 @@ const Auth = () => {
   }
 
   return (
-    <div>
+    <div className="authContainer">
+      <FontAwesomeIcon
+        icon={faTwitter}
+        color={'#04aaff'}
+        size="3x"
+        style={{ marginBottom: 30 }}
+      />
       <AuthForm newAccount={newAccount} />
-      <span onClick={toggleAccount}>
+      <div className="authBtns"></div>
+      <span onClick={toggleAccount} className="authSwitch">
         {newAccount ? 'Go to Sign In' : 'Go to Create Account'}
       </span>
-      <button name="google" onClick={onSocialPopup}>
-        Continue with Google
+      <button name="google" onClick={onSocialPopup} className="authBtn">
+        Continue with Google <FontAwesomeIcon icon={faGoogle} />
       </button>
     </div>
   )

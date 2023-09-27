@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form'
 import LinWeetItem from '../components/LinWeetItem'
 import { dbService, storageService } from '../firebase'
 import { GetWeetsTypes } from '../types/GetWeetsTypes'
-import { v4 as uuidv4 } from 'uuid'
 import LinWeetForm from '../components/LinWeetForm'
 
 const Home = ({ userObj }: { userObj: User | null }) => {
@@ -35,9 +34,9 @@ const Home = ({ userObj }: { userObj: User | null }) => {
   }, [])
 
   return (
-    <div>
+    <div className="container">
       <LinWeetForm userObj={userObj} />
-      <ul>
+      <div style={{ marginTop: 30 }}>
         {linWeets
           .sort((a, b) => b.createdAt! - a.createdAt!)
           .map((weet, idx) => (
@@ -47,7 +46,7 @@ const Home = ({ userObj }: { userObj: User | null }) => {
               isMine={userObj?.uid === weet.creatorId}
             />
           ))}
-      </ul>
+      </div>
     </div>
   )
 }

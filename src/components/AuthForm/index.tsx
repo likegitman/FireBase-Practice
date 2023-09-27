@@ -51,7 +51,7 @@ const AuthForm = ({ newAccount }: { newAccount: boolean }) => {
     }
   }
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="container">
       <input
         id="email"
         type="text"
@@ -66,6 +66,7 @@ const AuthForm = ({ newAccount }: { newAccount: boolean }) => {
             message: 'Invalid email format',
           },
         })}
+        className="authInput"
       />
       <input
         id="password"
@@ -81,8 +82,13 @@ const AuthForm = ({ newAccount }: { newAccount: boolean }) => {
             message: 'Invalid password format',
           },
         })}
+        className="authInput"
       />
-      <input type="submit" value={newAccount ? 'Create Account' : 'Log In'} />
+      <input
+        type="submit"
+        value={newAccount ? 'Create Account' : 'Log In'}
+        className="authInput authSubmit"
+      />
     </form>
   )
 }
